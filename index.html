@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/app.js"></script>
+  <title>Hora App</title>
+</head>
+<body>
+  <main class="app-container">
+
+    <div class="tasks">
+      <div class="task-input">
+        <input type="text" id="newTask" placeholder="New Task">
+        <button onclick="addTask()">Add</button>
+      </div>
+      <ul id="taskList"></ul>
+    </div>
+
+    <div id="pomodoro-app">
+      <div class="container">
+        <div class="modes">
+          <button class="mode" onclick="setMode('pomodoro')">Pomodoro</button>
+          <button class="mode" onclick="setMode('short')">Short Break</button>
+          <button class="mode" onclick="setMode('long')">Long Break</button>
+        </div>
+
+        <h1>🍅 Pomodoro</h1>
+        <div id="timer">25:00</div>
+          <button class="start" onclick="startTimer()">Start</button>
+          <button class="pause" onclick="pauseTimer()">Pause</button>
+          <button class="reset" onclick="resetTimer()">Reset</button>
+          <div class="cycle-info">
+            <p>Completed Pomodoros: <span id="pomodoroCount">0</span> / 4</p>
+            <p>Completed Cycles: <span id="cycleCount">0</span></p>
+          </div>
+        </div>
+    </div>
+  </main>
+</body>
+</html>

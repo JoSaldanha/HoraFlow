@@ -1,0 +1,106 @@
+body{
+    font-family: Arial, sans-serif;
+    background:#1e1e2f;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    text-align:center;
+    background:#2b2b40;
+    padding:40px;
+    border-radius:15px;
+    width:380px;
+}
+
+/* Pomodoro */
+#timer{
+    font-size:100px;
+    margin:20px 0;
+}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.mode{
+    background:#444;
+    color:white;
+}
+
+.start{
+    background:#4CAF50;
+    color:white;
+}
+
+.pause{
+    background:#ff9800;
+    color:white;
+}
+
+.reset{
+    background:#f44336;
+    color:white;
+}
+
+button:hover{
+    opacity:0.8;
+}
+
+.cycle-info {
+    margin-top:10px;
+}
+
+/* Tasks */
+.task-input{
+    margin-top:15px;
+}
+
+.task-input input{
+    padding:8px;
+    width:65%;
+    border-radius:5px;
+    border:none;
+    margin-right:5px;
+}
+
+.task-input button{
+    background:#4CAF50;
+    color:white;
+}
+
+#taskList{
+    list-style:none;
+    padding-left:0;
+    margin-top:15px;
+    text-align:left;
+}
+
+#taskList li{
+    background:#3b3b58;
+    margin:5px 0;
+    padding:10px;
+    border-radius:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+#taskList li.completed{
+    text-decoration: line-through;
+    opacity:0.7;
+}
+
+#taskList button{
+    background:#f44336;
+    padding:5px 8px;
+    font-size:12px;
+}
