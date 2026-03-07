@@ -18,24 +18,29 @@
       <ul id="taskList"></ul>
     </div>
 
-    <div id="pomodoro-app">
-      <div class="container">
+    <div id="pomodoro-container">
+      <div class="container progress-container">
+        Progress
+      </div>
+      <div id="pomodoro-app" class="container">
         <div class="modes">
           <button class="mode" onclick="setMode('pomodoro')">Pomodoro</button>
           <button class="mode" onclick="setMode('short')">Short Break</button>
           <button class="mode" onclick="setMode('long')">Long Break</button>
         </div>
-
+  
         <h1>🍅 Pomodoro</h1>
         <div id="timer">25:00</div>
+        <div>
           <button class="start" onclick="startTimer()">Start</button>
           <button class="pause" onclick="pauseTimer()">Pause</button>
           <button class="reset" onclick="resetTimer()">Reset</button>
-          <div class="cycle-info">
-            <p>Completed Pomodoros: <span id="pomodoroCount">0</span> / 4</p>
-            <p>Completed Cycles: <span id="cycleCount">0</span></p>
-          </div>
         </div>
+        <div class="cycle-info">
+          <p>Completed Pomodoros: <span id="pomodoroCount">0</span> / 4</p>
+          <p>Completed Cycles: <span id="cycleCount">0</span></p>
+        </div>
+      </div>
     </div>
   </main>
 </body>

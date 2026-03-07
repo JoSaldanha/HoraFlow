@@ -136,7 +136,12 @@ function addTask(){
 
 function toggleTask(index){
     taskList[index].completed = !taskList[index].completed;
-    renderTasks();
+    const li = document.querySelector(`#taskList li:nth-child(${index + 1})`);
+    if (li) {
+        li.classList.toggle('completed');
+        const input = li.querySelector('input');
+        input.checked = taskList[index].completed;
+    }
     saveState();
 }
 
@@ -146,18 +151,39 @@ function deleteTask(index){
     saveState();
 }
 
-function renderTasks(){
-    let ul = document.getElementById("taskList");
+function renderTasks() {
+    const ul = document.getElementById("taskList");
     ul.innerHTML = "";
-    taskList.forEach((task, index)=>{
-        let li = document.createElement("li");
-        li.className = task.completed ? "completed" : "";
+
+    taskList.forEach((task, index) => {
+        const li = document.createElement("li");
+        if (task.completed) {
+            li.classList.add('completed');
+        }
+        const taskId = `task-${index}`;
+
         li.innerHTML = `
-            <input type="checkbox" ${task.completed ? "checked" : ""} onchange="toggleTask(${index})">
-            <span>${task.text}</span>
-            <button onclick="deleteTask(${index})">❌</button>
+            <div class="checkbox-wrapper">
+                <label for="${taskId}" class="item">
+                    <input type="checkbox" id="${taskId}" class="hidden" />
+                    <label for="${taskId}" class="checkbox">
+                        <svg viewBox="0 0 14 12">
+                            <polyline points="1 7.6 5 11 13 1"></polyline>
+                        </svg>
+                    </label>
+                    <label for="${taskId}" class="checkbox-label">${task.text}</label>
+                </label>
+                <button class="delete-btn">❌</button>
+            </div>
         `;
         ul.appendChild(li);
+
+        const checkbox = li.querySelector(`#${taskId}`);
+        checkbox.checked = task.completed;
+        checkbox.addEventListener("change", () => toggleTask(index));
+
+        const deleteBtn = li.querySelector(".delete-btn");
+        deleteBtn.addEventListener("click", () => deleteTask(index));
     });
 }
 
