@@ -15,6 +15,8 @@ const times = {
     long: 0.1
 };
 
+const themeSwitch = document.getElementById("switch-sun-moon");
+
 const alertSound = new Audio("assets/sounds/universfield-new-notification-048-494235.mp3");
 alertSound.volume = 0.3;
 
@@ -25,7 +27,8 @@ function saveState() {
         defaultTime,
         pomodoroCount,
         taskList,
-        cycleCount
+        cycleCount,
+        theme: document.body.classList.contains("animate-moon")
     };
     localStorage.setItem('pomodoroState', JSON.stringify(state));
 }
@@ -40,6 +43,10 @@ function loadState() {
         pomodoroCount = state.pomodoroCount || 0;
         taskList = state.taskList || [];
         cycleCount = state.cycleCount || 0;
+        if (state.theme) {
+            document.body.classList.add("animate-moon");
+            themeSwitch.checked = true;
+        }
     }else{
         time = times[mode]*60;
         defaultTime = times[mode]*60;
@@ -193,3 +200,13 @@ updateDisplay();
 renderTasks();
 document.getElementById("pomodoroCount").innerText = pomodoroCount;
 document.getElementById("cycleCount").innerText = cycleCount;
+
+themeSwitch.addEventListener("change", () => {
+    document.body.classList.remove("animate-sun", "animate-moon"); // reset
+    
+    if(themeSwitch.checked){
+        document.body.classList.add("animate-moon");
+    } else {
+        document.body.classList.add("animate-sun");
+    }
+});

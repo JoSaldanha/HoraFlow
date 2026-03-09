@@ -4,11 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
-  <script defer src="js/app.js"></script>
   <title>Hora App</title>
 </head>
 <body>
   <main class="app-container">
+
+    <div class="switch-wrapper">
+      <label class="switch" for="switch-sun-moon">
+        <input type="checkbox" id="switch-sun-moon">
+        <span class="slider"></span>
+      </label>
+    </div>
 
     <div class="tasks">
       <div class="task-input">
@@ -43,5 +49,6 @@
       </div>
     </div>
   </main>
+  <script defer src="js/app.js"></script>
 </body>
 </html>
