@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <title>Hora App</title>
 </head>
 <body>
@@ -26,7 +27,8 @@
 
     <div id="pomodoro-container">
       <div class="container progress-container">
-        Progress
+        <h2>Hours per day</h2>
+        <canvas id="weeklyChart"></canvas>
       </div>
       <div id="pomodoro-app" class="container">
         <div class="modes">

@@ -15,6 +15,16 @@ const times = {
     long: 0.1
 };
 
+let weeklyData = {
+  "Sun": 0,
+  "Mon": 0,
+  "Tue": 0,
+  "Wed": 0,
+  "Thu": 0,
+  "Fri": 0,
+  "Sat": 0
+};
+
 const themeSwitch = document.getElementById("switch-sun-moon");
 
 const alertSound = new Audio("assets/sounds/universfield-new-notification-048-494235.mp3");
@@ -31,6 +41,7 @@ function saveState() {
         theme: document.body.classList.contains("animate-moon")
     };
     localStorage.setItem('pomodoroState', JSON.stringify(state));
+    localStorage.setItem('weeklyData', JSON.stringify(weeklyData));
 }
 
 function loadState() {
@@ -53,6 +64,117 @@ function loadState() {
         taskList = [];
         cycleCount = 0;
     }
+    
+    const savedWeeklyData = localStorage.getItem('weeklyData');
+    if(savedWeeklyData){
+        weeklyData = JSON.parse(savedWeeklyData);
+    }
+}
+
+// ===== Weekly Data and Chart =====
+const daysMapping = {
+    0: "Sun",
+    1: "Mon",
+    2: "Tue",
+    3: "Wed",
+    4: "Thu",
+    5: "Fri",
+    6: "Sat"
+};
+
+function getDayOfWeek() {
+    const date = new Date();
+    return daysMapping[date.getDay()];
+}
+
+let chart = null;
+
+function renderChart() {
+    const ctx = document.getElementById('weeklyChart');
+    if (!ctx) return;
+
+    if (chart) {
+        chart.destroy();
+    }
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(weeklyData),
+            datasets: [{
+                label: 'Pomodoro hours',
+                data: Object.values(weeklyData),
+                backgroundColor: [
+                    '#FF6B9D',
+                    '#FEC200',
+                    '#26A0DA',
+                    '#62D26F',
+                    '#9B59B6',
+                    '#E74C3C',
+                    '#3498DB'
+                ],
+                borderColor: [
+                    '#FF4081',
+                    '#FFB81C',
+                    '#0277BD',
+                    '#388E3C',
+                    '#7B1FA2',
+                    '#C62828',
+                    '#1565C0'
+                ],
+                borderWidth: 2,
+                borderRadius: 8,
+                hoverBackgroundColor: 'rgba(255,255,255,0.8)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    padding: 12,
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    callbacks: {
+                        label: function(context) {
+                            const hours = context.parsed.y;
+                            const pomodoros = (hours / (times.pomodoro / 60)).toFixed(0);
+                            return hours + 'h (' + pomodoros + ' Pomodoros)';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    
+                    ticks: {
+                        color: '#fff',
+                        callback: function(value) {
+                            return value + 'h';
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)',
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#fff'
+                    },
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    }
+                }
+            }
+        }
+    });
 }
 
 function updateDisplay(){
@@ -106,6 +228,9 @@ function handleCycle(){
         pomodoroCount++;
         document.getElementById("pomodoroCount").innerText = pomodoroCount;
 
+        const today = getDayOfWeek();
+        weeklyData[today] = (weeklyData[today] || 0) + (times.pomodoro / 60);
+
         if(pomodoroCount % maxPomodoros === 0){
             alert("Complete cycle! Time for a Long Break 🌴");
             setMode('long');
@@ -124,6 +249,8 @@ function handleCycle(){
         setMode('pomodoro');
     }
 
+    saveState();
+    renderChart();
     startTimer();
 }
 
@@ -201,12 +328,16 @@ renderTasks();
 document.getElementById("pomodoroCount").innerText = pomodoroCount;
 document.getElementById("cycleCount").innerText = cycleCount;
 
+renderChart();
+
 themeSwitch.addEventListener("change", () => {
     document.body.classList.remove("animate-sun", "animate-moon"); // reset
     
     if(themeSwitch.checked){
         document.body.classList.add("animate-moon");
+        saveState();
     } else {
         document.body.classList.add("animate-sun");
+        saveState();
     }
 });
