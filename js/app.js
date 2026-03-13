@@ -10,9 +10,9 @@ let pomodoroCount = 0;
 const maxPomodoros = 4;
 
 const times = {
-    pomodoro: 0.1,
-    short: 0.1,
-    long: 0.1
+    pomodoro: 25,
+    short: 5,
+    long: 15
 };
 
 let weeklyData = {
@@ -105,26 +105,14 @@ function renderChart() {
                 label: 'Pomodoro hours',
                 data: Object.values(weeklyData),
                 backgroundColor: [
-                    '#FF6B9D',
-                    '#FEC200',
-                    '#26A0DA',
-                    '#62D26F',
-                    '#9B59B6',
-                    '#E74C3C',
-                    '#3498DB'
+                    'rgba(241,245,249,0.9)',
                 ],
                 borderColor: [
-                    '#FF4081',
-                    '#FFB81C',
-                    '#0277BD',
-                    '#388E3C',
-                    '#7B1FA2',
-                    '#C62828',
-                    '#1565C0'
+                    '#B2BEC3',
                 ],
                 borderWidth: 2,
                 borderRadius: 8,
-                hoverBackgroundColor: 'rgba(255,255,255,0.8)'
+                hoverBackgroundColor: '#FFFFFF',
             }]
         },
         options: {
@@ -186,6 +174,9 @@ function updateDisplay(){
 }
 
 function startTimer(){
+    const resetBtn = document.querySelector(".material-symbols-outlined");
+    if (resetBtn) resetBtn.style.visibility = "visible";
+    
     if(running) return;
     running = true;
     timer = setInterval(()=>{
@@ -208,19 +199,37 @@ function pauseTimer(){
 }
 
 function resetTimer(){
+    const playBtn = document.querySelector(".btn-flip");
+    if (playBtn) playBtn.classList.remove("active");
+    const resetBtn = document.querySelector(".material-symbols-outlined");
+    if (resetBtn) resetBtn.style.visibility = "hidden";
+
     clearInterval(timer);
     running = false;
     setMode(mode);
 }
 
 function setMode(selectedMode){
+    const buttons = document.querySelectorAll(".mode");
+    buttons.forEach(btn => btn.classList.remove("active"));
+    
+    const targetBtn = document.querySelector(`[data-mode="${selectedMode}"]`);
+    if (targetBtn) targetBtn.classList.add("active");
+    
     clearInterval(timer);
     running = false;
     mode = selectedMode;
 
-    defaultTime = times[mode] * 60;
-    time = defaultTime;
-    updateDisplay();
+    const display = document.getElementById("timer");
+    display.classList.add("fade");
+
+    setTimeout(() => {
+        defaultTime = times[mode] * 60;
+        time = defaultTime;
+        updateDisplay();
+
+        display.classList.remove("fade");
+    }, 200);
 }
 
 function handleCycle(){
@@ -331,7 +340,7 @@ document.getElementById("cycleCount").innerText = cycleCount;
 renderChart();
 
 themeSwitch.addEventListener("change", () => {
-    document.body.classList.remove("animate-sun", "animate-moon"); // reset
+    document.body.classList.remove("animate-sun", "animate-moon");
     
     if(themeSwitch.checked){
         document.body.classList.add("animate-moon");
@@ -340,4 +349,22 @@ themeSwitch.addEventListener("change", () => {
         document.body.classList.add("animate-sun");
         saveState();
     }
+});
+
+function toggleTimer(event) {
+    const btn = event ? event.currentTarget : document.querySelector(".btn-flip");
+
+    if (!btn) return;
+
+    btn.classList.toggle("active");
+
+    if (btn.classList.contains("active")) {
+        startTimer();
+    } else {
+        pauseTimer();
+    }
+}
+
+document.querySelectorAll(".btn-flip").forEach(btn => {
+    btn.addEventListener("click", toggleTimer);
 });
