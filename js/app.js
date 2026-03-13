@@ -58,6 +58,7 @@ function loadState() {
             document.body.classList.add("animate-moon");
             themeSwitch.checked = true;
         }
+        setMode(mode);
     }else{
         time = times[mode]*60;
         defaultTime = times[mode]*60;
@@ -87,6 +88,11 @@ function getDayOfWeek() {
     return daysMapping[date.getDay()];
 }
 
+function isDarkTheme() {
+    const state = JSON.parse(localStorage.getItem('pomodoroState'));
+    return state?.theme;
+}
+
 let chart = null;
 
 function renderChart() {
@@ -96,6 +102,9 @@ function renderChart() {
     if (chart) {
         chart.destroy();
     }
+
+    const dark = isDarkTheme();
+    const tickColor = dark ? "#F1F5F9" : "#1F2937";
 
     chart = new Chart(ctx, {
         type: 'bar',
@@ -125,8 +134,8 @@ function renderChart() {
                 tooltip: {
                     backgroundColor: 'rgba(0,0,0,0.8)',
                     padding: 12,
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
+                    titleColor: 'inherit',
+                    bodyColor: 'inherit',
                     callbacks: {
                         label: function(context) {
                             const hours = context.parsed.y;
@@ -141,7 +150,7 @@ function renderChart() {
                     beginAtZero: true,
                     
                     ticks: {
-                        color: '#fff',
+                        color: tickColor,
                         callback: function(value) {
                             return value + 'h';
                         }
@@ -153,7 +162,7 @@ function renderChart() {
                 },
                 x: {
                     ticks: {
-                        color: '#fff'
+                        color: tickColor,
                     },
                     grid: {
                         display: false,
@@ -345,9 +354,11 @@ themeSwitch.addEventListener("change", () => {
     if(themeSwitch.checked){
         document.body.classList.add("animate-moon");
         saveState();
+        renderChart();
     } else {
         document.body.classList.add("animate-sun");
         saveState();
+        renderChart();
     }
 });
 

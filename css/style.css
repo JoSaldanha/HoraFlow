@@ -186,6 +186,8 @@ button{
     border-radius:6px;
     cursor:pointer;
     font-size:14px;
+    background: #4CAF50;
+    border: 1px solid #2d742f;
 }
 
 #play-buttons {
@@ -203,8 +205,9 @@ button{
 
 .btn-playpause {
     position: relative;
-    background: #5a5a5a;
-    border: 1px solid #3b3b3b;
+    /* background: #5a5a5a; */
+    background: #4CAF50;
+    border: 1px solid #2d742f;
     color: #fff;
     overflow: hidden;
 }
@@ -212,8 +215,8 @@ button{
 .click-btn {
     position: relative;
     display: flex;
-    width: 120px;
-    height: 40px;
+    width: 148px;
+    height: 48px;
     justify-content: center;
     align-items: center;
     margin: 0.5rem;
@@ -225,18 +228,18 @@ button{
 }
 
 .btn-flip {
-    box-shadow: 0 4px 0 #313131;
+    box-shadow: 0 4px 0 #256327;
     transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .btn-flip:active {
     transform: translateY(2px);
-    box-shadow: 0 2px 0 #313131;
+    box-shadow: 0 2px 0 #256327;
 }
 
 .btn-flip.active {
     transform: translateY(2px);
-    box-shadow: 0px 2px rgba(0,0,0,0.7);
+    box-shadow: 0px 2px rgba(8, 65, 2, 0.7);
 }
 
 .btn-flip span {
@@ -286,13 +289,12 @@ button{
 }
 
 .mode{
-    background: #474747;;
     color:white;
     transition: all 0.2s ease;
 }
 
 .mode.active {
-  background: #333;
+  background: #256327;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
@@ -333,6 +335,8 @@ button:hover{
 .task-input button{
     background:#4CAF50;
     color:white;
+    box-shadow: 0px 1px 0px #256327;
+    border: 1px solid #256327;
 }
 
 #taskList{
