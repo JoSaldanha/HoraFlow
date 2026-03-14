@@ -3,6 +3,8 @@ let time;
 let defaultTime;
 let timer;
 let running = false;
+let startTime;
+let duration;
 
 let mode = 'pomodoro';
 let cycleCount = 0;
@@ -11,9 +13,16 @@ const maxPomodoros = 4;
 
 const times = {
     pomodoro: 25,
-    short: 5,
-    long: 15
+    short_break: 5,
+    long_break: 15
 };
+
+const modeNames = {
+    pomodoro: "Pomodoro 🍅",
+    short_break: "Short Break ☕",
+    long_break: "Long Break 🌴"
+};
+
 
 let weeklyData = {
   "Sun": 0,
@@ -30,7 +39,13 @@ const themeSwitch = document.getElementById("switch-sun-moon");
 const alertSound = new Audio("assets/sounds/universfield-new-notification-048-494235.mp3");
 alertSound.volume = 0.3;
 
-function saveState() {
+let lastSave = 0;
+
+function saveState(){
+    const now = Date.now();
+    if(now - lastSave < 5000) return;
+    lastSave = now;
+
     const state = {
         mode,
         time,
@@ -40,6 +55,7 @@ function saveState() {
         cycleCount,
         theme: document.body.classList.contains("animate-moon")
     };
+
     localStorage.setItem('pomodoroState', JSON.stringify(state));
     localStorage.setItem('weeklyData', JSON.stringify(weeklyData));
 }
@@ -58,7 +74,7 @@ function loadState() {
             document.body.classList.add("animate-moon");
             themeSwitch.checked = true;
         }
-        setMode(mode);
+        // setMode(mode);
     }else{
         time = times[mode]*60;
         defaultTime = times[mode]*60;
@@ -140,7 +156,7 @@ function renderChart() {
                         label: function(context) {
                             const hours = context.parsed.y;
                             const pomodoros = (hours / (times.pomodoro / 60)).toFixed(0);
-                            return hours + 'h (' + pomodoros + ' Pomodoros)';
+                            return hours.toFixed(2) + 'h (' + pomodoros + ' Pomodoros)';
                         }
                     }
                 }
@@ -175,34 +191,48 @@ function renderChart() {
 }
 
 function updateDisplay(){
-    let minutes = Math.floor(time / 60);
-    let seconds = time % 60;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    document.getElementById("timer").innerText = minutes + ":" + seconds;
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    
+    const formatted =
+        String(minutes).padStart(2,"0") + ":" +
+        String(seconds).padStart(2,"0");
+
+    document.querySelector("#timer").textContent = formatted;
+    document.title = `${formatted} - ${modeNames[mode]}`;
     saveState();
+}
+
+function tick(){
+    if(!running) return;
+
+    const elapsed = Date.now() - startTime;
+    const remaining = Math.max(duration - elapsed, 0);
+    time = Math.ceil(remaining / 1000);
+    updateDisplay();
+
+    if(remaining <= 0){
+        running = false;
+        alertSound.play();
+        handleCycle();
+    } else {
+        requestAnimationFrame(tick);
+    }
 }
 
 function startTimer(){
     const resetBtn = document.querySelector(".material-symbols-outlined");
-    if (resetBtn) resetBtn.style.visibility = "visible";
-    
+    if(resetBtn) resetBtn.style.visibility = "visible";
+
     if(running) return;
     running = true;
-    timer = setInterval(()=>{
-        if(time > 0){
-            time--;
-            updateDisplay();
-        }else{
-            clearInterval(timer);
-            running = false;
-            alertSound.play();
-            handleCycle();
-        }
-    },1000);
+
+    duration = time * 1000;
+    startTime = Date.now();
+    tick();
 }
 
 function pauseTimer(){
-    clearInterval(timer);
     running = false;
     saveState();
 }
@@ -231,17 +261,20 @@ function setMode(selectedMode){
 
     const display = document.getElementById("timer");
     display.classList.add("fade");
-
     setTimeout(() => {
         defaultTime = times[mode] * 60;
-        time = defaultTime;
-        updateDisplay();
-
+        time = defaultTime; updateDisplay();
         display.classList.remove("fade");
     }, 200);
+
+    defaultTime = times[mode] * 60;
+    time = defaultTime;
+    updateDisplay();
 }
 
 function handleCycle(){
+    pauseTimer();
+
     if(mode === 'pomodoro'){
         pomodoroCount++;
         document.getElementById("pomodoroCount").innerText = pomodoroCount;
@@ -250,26 +283,44 @@ function handleCycle(){
         weeklyData[today] = (weeklyData[today] || 0) + (times.pomodoro / 60);
 
         if(pomodoroCount % maxPomodoros === 0){
-            alert("Complete cycle! Time for a Long Break 🌴");
-            setMode('long');
+            notifyUser("Complete cycle! Time for a Long Break 🌴");
+            setMode('long_break');
         }else{
-            alert("Pomodoro completed! Time for a Short Break ☕");
-            setMode('short');
+            notifyUser("Pomodoro completed! Time for a Short Break ☕");
+            setMode('short_break');
         }
     }else{
-        alert("Break completed! Time for a Pomodoro 🍅");
-        if(mode === 'long'){
-          cycleCount++;
-          pomodoroCount = 0;
-          document.getElementById("pomodoroCount").innerText = pomodoroCount;
-          document.getElementById("cycleCount").innerText = cycleCount;
+        notifyUser("Break completed! Time for a Pomodoro 🍅");
+        if(mode === 'long_break'){
+            cycleCount++;
+            pomodoroCount = 0;
+            document.getElementById("pomodoroCount").innerText = pomodoroCount;
+            document.getElementById("cycleCount").innerText = cycleCount;
         }
         setMode('pomodoro');
     }
 
+    duration = time * 1000;
+    startTime = Date.now();
+    running = true;
+    tick();
+
     saveState();
     renderChart();
-    startTimer();
+}
+
+function notifyUser(message){
+    if(Notification.permission === "default"){
+        Notification.requestPermission();
+    }
+
+    alertSound.play().catch(e => console.log("Sound blocked in the background"));
+
+    if(Notification.permission === "granted"){
+        new Notification("Pomodoro Timer", {
+            body: message,
+        });
+    }
 }
 
 // ===== to-do list =====
@@ -379,3 +430,21 @@ function toggleTimer(event) {
 document.querySelectorAll(".btn-flip").forEach(btn => {
     btn.addEventListener("click", toggleTimer);
 });
+
+document.addEventListener("visibilitychange", () => {
+    if(!document.hidden && running){
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(duration - elapsed, 0);
+        time = Math.ceil(remaining / 1000);
+        updateDisplay();
+    }
+});
+
+setInterval(() => {
+    if(running){
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(duration - elapsed, 0);
+        time = Math.ceil(remaining / 1000);
+        updateDisplay();
+    }
+}, 500);
