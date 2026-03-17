@@ -1,0 +1,24 @@
+{
+  "name": "hora-app",
+  "version": "2.0.0",
+  "description": "Modular Pomodoro application with task management and weekly charts",
+  "main": "src/js/app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "python -m http.server 8000 --bind 127.0.0.1",
+    "serve": "http-server",
+    "start": "open public/index.html"
+  },
+  "keywords": [
+    "pomodoro",
+    "timer",
+    "productivity",
+    "tasks"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "chart.js": "^3.9.1"
+  }
+}

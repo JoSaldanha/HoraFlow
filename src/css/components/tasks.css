@@ -1,0 +1,198 @@
+/* Mode Buttons */
+.mode {
+    color: var(--color-text-light);
+    transition: all var(--transition-normal) ease;
+}
+
+.mode.active {
+    background: var(--color-primary-dark);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Tasks Container */
+.tasks {
+    background: var(--color-bg-light);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+    border: 1px solid var(--color-border-light);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.task-input {
+    margin: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+}
+
+.task-input input {
+    padding: var(--spacing-sm);
+    width: stretch;
+    border-radius: var(--radius-sm);
+    border: none;
+}
+
+.task-input button {
+    background: var(--color-primary);
+    color: var(--color-text-light);
+    box-shadow: 0px 1px 0px var(--color-primary-dark);
+    border: 1px solid var(--color-primary-dark);
+}
+
+#taskList {
+    list-style: none;
+    text-align: left;
+    max-height: 800px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f100;
+}
+
+#taskList li {
+    background: rgba(229, 229, 229, 0.1);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+    border: 1px solid rgba(230, 230, 230, 0.05);
+    margin: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+}
+
+#taskList li.completed {
+    opacity: 0.7;
+}
+
+#taskList button {
+    background: var(--color-error);
+    padding: var(--spacing-xs) calc(var(--spacing-sm) - 2px);
+    font-size: 12px;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.checkbox-wrapper .hidden {
+    visibility: hidden;
+    display: none;
+}
+
+.checkbox-wrapper .item {
+    display: inline-flex;
+    align-items: center;
+    flex: 1;
+}
+
+.checkbox-wrapper .item .checkbox {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: var(--spacing-md);
+    border: 1px solid #444;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.checkbox-wrapper .item .checkbox svg {
+    width: 19.2px;
+    position: relative;
+    top: 2px;
+    transform: scale(0);
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--transition-slow) ease 0.1s;
+}
+
+.checkbox-wrapper .item .checkbox svg polyline {
+    stroke-width: 2;
+    stroke: var(--color-primary);
+}
+
+.checkbox-wrapper .item .checkbox:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    background: var(--color-primary);
+    transform: scale(0);
+    transition: all var(--transition-normal) ease;
+}
+
+.checkbox-wrapper .item .checkbox:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 2px;
+    height: 2px;
+    border-radius: 2px;
+    box-shadow: 0 -18px 0 var(--color-primary),
+                12px -12px 0 var(--color-primary),
+                18px 0 0 var(--color-primary),
+                12px 12px 0 var(--color-primary),
+                0 18px 0 var(--color-primary),
+                -12px 12px 0 var(--color-primary),
+                -18px 0 0 var(--color-primary),
+                -12px -12px 0 var(--color-primary);
+    transform: scale(0);
+    transition: all 0.6s ease;
+}
+
+.checkbox-wrapper .item .checkbox-label {
+    position: relative;
+    cursor: pointer;
+    transition: color var(--transition-slow) ease;
+    flex: 1;
+    max-width: 400px;
+    overflow-wrap: break-word;
+}
+
+.checkbox-wrapper .item .checkbox-label:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #666;
+    transition: width 0.4s ease;
+}
+
+#taskList li.completed .checkbox {
+    border-color: transparent;
+}
+
+#taskList li.completed .checkbox svg {
+    transform: scale(1);
+}
+
+#taskList li.completed .checkbox:before {
+    transform: scale(1);
+    opacity: 0;
+}
+
+#taskList li.completed .checkbox:after {
+    transform: scale(1);
+    opacity: 0;
+}
+
+#taskList li.completed .checkbox-label:after {
+    width: 100%;
+}
