@@ -427,6 +427,21 @@ function toggleTimer(event) {
     }
 }
 
+const modesBtns = document.querySelectorAll(".mode");
+
+function updateButtonText() {
+  const isMobile = window.innerWidth <= 375;
+
+  modesBtns.forEach(btn => {
+    btn.textContent = isMobile
+      ? btn.dataset.short
+      : btn.dataset.full;
+  });
+}
+
+updateButtonText();
+window.addEventListener("resize", updateButtonText);
+
 document.querySelectorAll(".btn-flip").forEach(btn => {
     btn.addEventListener("click", toggleTimer);
 });

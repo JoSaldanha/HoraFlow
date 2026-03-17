@@ -1,5 +1,5 @@
 body {
-  font-family: Verdana, Geneva, Tahoma, sans-serif, sans-serif;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: #333;
     height: 100vh;
     display: flex;
@@ -37,7 +37,7 @@ body.animate-moon {
 
 @keyframes moveGradientMoon {
     0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
+    100% { background-position: 80% 80%; }
 }
 
 .app-container {
@@ -326,7 +326,7 @@ button:hover{
 
 .task-input input{
     padding: 12px;
-    width: 80%;
+    width: stretch;
     border-radius: 5px;
     border: none;
     margin-right: 5px;
@@ -518,3 +518,62 @@ button:hover{
 .delete-btn:hover { opacity: 1; }
 
 #taskList { list-style: none; padding: 0; }
+
+
+/* Media Queries */
+
+@media (max-width: 1024px) {
+    body {
+        overflow-x: hidden;
+        overflow-y: scroll;
+        height: auto;
+    }
+
+    .app-container {
+        flex-direction: column-reverse;
+        height: inherit;
+        padding-top: 4em;
+        padding-bottom: 4em;
+    }
+
+    .tasks {
+        max-height: 480px;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    #timer {
+        margin: 32px 0;
+    }
+}
+
+@media (max-width: 475px) {
+    .app-container {
+        padding-top: 2em;
+        padding-bottom: 2em;
+        width: 85vw;
+    }
+
+    .task-input input {
+        min-width: 0;
+    }
+
+    #timer {
+        margin: 24px 0;
+    }
+
+    .click-btn {
+        width: 132px;
+        height: 42px;
+    }
+
+    .modes button {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 375px) {
+    .modes button {
+        padding: 10px 15px;
+    }
+}
