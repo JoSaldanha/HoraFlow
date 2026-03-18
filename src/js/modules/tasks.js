@@ -71,7 +71,7 @@ export function renderTasks(onRenderComplete) {
         checkbox.checked = task.completed;
         checkbox.addEventListener("change", () => {
             toggleTask(index);
-            renderTasks(onRenderComplete);
+            li.classList.toggle('completed');
             saveTaskState();
         });
 

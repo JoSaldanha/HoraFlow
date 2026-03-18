@@ -6,6 +6,7 @@ import { TIMER_DURATIONS, CHART_CONFIG, CHART_COLORS } from '../../config/consta
 import { isDarkTheme } from './theme.js';
 
 let chart = null;
+let minutesToHours = false;
 
 export function renderChart(weeklyData) {
     const ctx = document.getElementById('weeklyChart');
@@ -23,7 +24,7 @@ export function renderChart(weeklyData) {
         data: {
             labels: Object.keys(weeklyData),
             datasets: [{
-                label: 'Pomodoro hours',
+                label: 'Pomodoro time',
                 data: Object.values(weeklyData),
                 backgroundColor: [colors.bar],
                 borderColor: [colors.border],
@@ -46,9 +47,14 @@ export function renderChart(weeklyData) {
                     bodyColor: 'inherit',
                     callbacks: {
                         label: function(context) {
-                            const hours = context.parsed.y;
-                            const pomodoros = (hours / (TIMER_DURATIONS.pomodoro / 60)).toFixed(0);
-                            return hours.toFixed(2) + 'h (' + pomodoros + ' Pomodoros)';
+                            let time = context.parsed.y;
+                            if (time >= 60) {
+                              time = time / 60;
+                              minutesToHours = true;
+                            }
+                            let timeConvert = time >= 60 ? (time / 60).toFixed(2) + 'h' : time.toFixed(2) + 'min';
+                            const pomodoros = (context.parsed.y / (TIMER_DURATIONS.pomodoro / 60)).toFixed(0);
+                            return timeConvert + ' (' + pomodoros + ' Pomodoros)';
                         }
                     }
                 }
@@ -59,7 +65,7 @@ export function renderChart(weeklyData) {
                     ticks: {
                         color: colors.tick,
                         callback: function(value) {
-                            return value + 'h';
+                            return value + (minutesToHours ? 'h' : 'min');
                         }
                     },
                     grid: {
