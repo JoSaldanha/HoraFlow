@@ -25,7 +25,7 @@ export const MODE_LABELS = {
 
 // Audio configuration
 export const AUDIO_CONFIG = {
-    notification: "../../assets/sounds/universfield-new-notification-048-494235.mp3",
+    notification: "assets/sounds/universfield-new-notification-048-494235.mp3",
     volume: 0.3
 };
 

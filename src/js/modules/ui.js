@@ -2,7 +2,10 @@
  * UI Module - User interface management
  */
 
-import { MODE_NAMES } from '../../config/constants.js';
+import { MODE_NAMES, AUDIO_CONFIG } from '../../config/constants.js';
+
+const alertSound = new Audio(AUDIO_CONFIG.notification);
+alertSound.volume = AUDIO_CONFIG.volume;
 
 export function updateTimerDisplay(time, mode) {
     const minutes = Math.floor(time / 60);
@@ -88,14 +91,23 @@ export function updateResponsiveButtonText() {
     });
 }
 
-export function notifyUser(message) {
+export async function notifyUser(message) {
     if (Notification.permission === "default") {
-        Notification.requestPermission();
+        await Notification.requestPermission();
     }
 
     if (Notification.permission === "granted") {
-        new Notification("Pomodoro Timer", {
+        const notification = new Notification("Pomodoro Timer 🍅", {
             body: message,
+            tag: "pomodoro",
+            renotify: true,
+            silent: false
         });
+
+        notification.onclick = () => {
+            window.focus();
+            notification.close();
+        }
     }
+    alertSound.play().catch(err => console.log(err));
 }

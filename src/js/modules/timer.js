@@ -5,7 +5,6 @@
 import {
     TIMER_DURATIONS,
     MODE_NAMES,
-    AUDIO_CONFIG,
     POMODORO_CONFIG,
     DAYS_MAPPING
 } from '../../config/constants.js';
@@ -20,9 +19,6 @@ let mode = 'pomodoro';
 let cycleCount = 0;
 let pomodoroCount = 0;
 let weeklyData;
-
-const alertSound = new Audio(AUDIO_CONFIG.notification);
-alertSound.volume = AUDIO_CONFIG.volume;
 
 let onTickHandler = null;
 let onCycleCompleteHandler = null;
@@ -79,7 +75,6 @@ function tick() {
 
     if (remaining <= 0) {
         running = false;
-        alertSound.play().catch(e => console.log("Sound blocked"));
         handleCycle();
     } else {
         requestAnimationFrame(tick);

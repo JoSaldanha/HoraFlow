@@ -57,7 +57,7 @@ function initializeApp() {
         UI.updateCycleCount(newState.cycleCount);
         UI.updateModeDisplay(newState.mode);
         Chart.renderChart(newState.weeklyData);
-        UI.updatePlayButtonState(Timer.isRunning());
+        UI.updatePlayButtonState(true);   
     });
 
     Theme.setThemeChangeHandler(() => {
@@ -76,7 +76,10 @@ function setupEventListeners() {
 
     const playButton = document.querySelector(".btn-flip");
     if (playButton) {
-        playButton.addEventListener("click", () => {
+        playButton.addEventListener("click", async () => {
+            if (Notification.permission !== "granted") {
+                await Notification.requestPermission();
+            }
             const isPlaying = Timer.toggleTimer();
             UI.updatePlayButtonState(isPlaying);
 
